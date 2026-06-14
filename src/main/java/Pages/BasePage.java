@@ -14,17 +14,9 @@ public class BasePage {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
-    protected void click(By locator) {
-        wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
-    }
-
-    protected void sendText(By locator, String text) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(locator)).sendKeys(text);
-    }
-
-    protected String getText(By locator) {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator)).getText();
-    }
+    protected void click(By locator) { wait.until(ExpectedConditions.elementToBeClickable(locator)).click(); }
+    protected void sendText(By locator, String text) { wait.until(ExpectedConditions.visibilityOfElementLocated(locator)).sendKeys(text); }
+    protected String getText(By locator) { return wait.until(ExpectedConditions.visibilityOfElementLocated(locator)).getText(); }
 
     public String getAlertTextAndAccept() {
         wait.until(ExpectedConditions.alertIsPresent());
@@ -34,5 +26,10 @@ public class BasePage {
         return text;
     }
 
-
+    // الميثود الموحدة للجميع (احذف التكرار في الصفحات الأخرى)
+    public boolean isElementDisplayed(By locator) {
+        try {
+            return wait.until(d -> driver.findElement(locator).isDisplayed());
+        } catch (Exception e) { return false; }
+    }
 }
