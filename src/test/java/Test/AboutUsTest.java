@@ -1,44 +1,44 @@
 package Test;
 
 import Base.BaseTest;
-import Pages.*;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
+import Pages.HomePage;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class AboutUsTest extends BaseTest {
 
+    private HomePage homePage;
+
+    @BeforeMethod
+    public void setup() {
+        homePage = new HomePage(driver);
+    }
+
     @Test
     public void TC_0044_verifyUserCanOpenAboutUsModal() {
-        HomePage home = new HomePage(driver);
-        home.openAbout();
-
-        WebElement modal = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("videoModal")));
-        Assert.assertTrue(modal.isDisplayed());
+        homePage.openAbout();
+        Assert.assertTrue(homePage.isAboutModalDisplayed(), "About Us modal should be visible");
     }
 
     @Test
     public void TC_0045_verifyUserCanPlayAboutUsVideo() {
-        HomePage home = new HomePage(driver);
-        home.openAbout();
+        homePage.openAbout();
+        homePage.playVideo();
 
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(".vjs-big-play-button"))).click();
-
-        Assert.assertTrue(driver.findElement(By.id("example-video")).isDisplayed());
+        // هنا السر: ننتظر تحقق الشرط بدلاً من التحقق اللحظي
+        boolean isVideoVisible = wait.until(d -> homePage.isVideoPlayerDisplayed());
+        Assert.assertTrue(isVideoVisible, "Video player should be displayed");
     }
 
     @Test
     public void TC_0046_verifyUserCanCloseAboutUsModal() {
-        HomePage home = new HomePage(driver);
-        home.openAbout();
+        homePage.openAbout();
+        homePage.closeAboutModal();
 
-        WebElement modal = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("videoModal")));
-
-        driver.findElement(By.xpath("//div[@id='videoModal']//button[text()='Close']")).click();
-
-        boolean isInvisible = wait.until(ExpectedConditions.invisibilityOf(modal));
-        Assert.assertTrue(isInvisible, "Modal should be invisible after clicking Close!");
+        // هنا السر: ننتظر حتى يختفي المودال تماماً
+        boolean isModalHidden = wait.until(d -> homePage.isAboutModalHidden());
+        Assert.assertTrue(isModalHidden, "Modal should be invisible after clicking Close!");
     }
 }
