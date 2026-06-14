@@ -3,137 +3,109 @@ package Test;
 import Base.BaseTest;
 import Pages.*;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class CheckoutTest extends BaseTest {
 
-    private void addProductAndGoToCheckout() {
-        HomePage home = new HomePage(driver);
-        ProductPage product = new ProductPage(driver);
-        CartPage cart = new CartPage(driver);
+    private CheckoutPage checkoutPage;
+    private HomePage homePage;
+    private CartPage cartPage;
 
-        home.openProduct("Samsung galaxy s6");
-        product.addToCart();
-        home.openCart();
-        cart.openPlaceOrder();
+    @BeforeMethod
+    public void setupScenario() {
+        checkoutPage = new CheckoutPage(driver);
+        homePage = new HomePage(driver);
+        cartPage = new CartPage(driver);
+
+        homePage.openProduct("Samsung galaxy s6");
+        new ProductPage(driver).addToCart();
+        homePage.openCart();
+        cartPage.openPlaceOrder();
     }
 
     @Test
-    public void TC_0032_verifyUserCanOpenPlaceOrderForm() {
-        addProductAndGoToCheckout();
-
-        WebElement nameField = wait.until(ExpectedConditions.visibilityOfElementLocated(org.openqa.selenium.By.id("name")));
-        Assert.assertTrue(nameField.isDisplayed(), "Place Order form did not open");
+    public void verifyUserCanOpenPlaceOrderForm() {
+        Assert.assertTrue(checkoutPage.isModalVisible(), "Place Order form did not open");
     }
 
     @Test
-    public void TC_0033_verifyUserCompletesPurchaseSuccessfully() {
-        addProductAndGoToCheckout();
-        CheckoutPage checkout = new CheckoutPage(driver);
-        checkout.fillForm("Shams mo", "Egypt", "Mansoura", "123456789", "6", "2026");
-        checkout.clickPurchase();
-        Assert.assertEquals(checkout.getSuccessMessage(), "Thank you for your purchase!");
+    public void verifyUserCompletesPurchaseSuccessfully() {
+        checkoutPage.fillForm("Shams mo", "Egypt", "Mansoura", "123456789", "6", "2026");
+        checkoutPage.clickPurchase();
+        Assert.assertEquals(checkoutPage.getSuccessMessage(), "Thank you for your purchase!");
     }
 
     @Test
-    public void TC_0034_verifyPurchaseFailsWhenNameIsEmpty() {
-        addProductAndGoToCheckout();
-        CheckoutPage checkout = new CheckoutPage(driver);
-        checkout.fillForm("", "Egypt", "Mansoura", "123456789", "6", "2026");
-        checkout.clickPurchase();
-        Assert.assertEquals(checkout.getAlertTextAndAccept(), "Please fill out Name and Creditcard.");
+    public void verifyPurchaseFailsWhenNameIsEmpty() {
+        checkoutPage.fillForm("", "Egypt", "Mansoura", "123456789", "6", "2026");
+        checkoutPage.clickPurchase();
+        Assert.assertEquals(checkoutPage.getAlertTextAndAccept(), "Please fill out Name and Creditcard.");
     }
 
     @Test
-    public void TC_0035_verifyPurchaseFailsWhenCreditCardIsEmpty() {
-        addProductAndGoToCheckout();
-        CheckoutPage checkout = new CheckoutPage(driver);
-        checkout.fillForm("Shams mo", "Egypt", "Mansoura", "", "6", "2026");
-        checkout.clickPurchase();
-        Assert.assertEquals(checkout.getAlertTextAndAccept(), "Please fill out Name and Creditcard.");
+    public void verifyPurchaseFailsWhenCreditCardIsEmpty() {
+        checkoutPage.fillForm("Shams mo", "Egypt", "Mansoura", "", "6", "2026");
+        checkoutPage.clickPurchase();
+        Assert.assertEquals(checkoutPage.getAlertTextAndAccept(), "Please fill out Name and Creditcard.");
     }
 
     @Test
-    public void TC_0036_verifyPurchaseFailsWhenNameAndCardEmpty() {
-        addProductAndGoToCheckout();
-        CheckoutPage checkout = new CheckoutPage(driver);
-        checkout.fillForm("", "Egypt", "Mansoura", "", "6", "2026");
-        checkout.clickPurchase();
-        Assert.assertEquals(checkout.getAlertTextAndAccept(), "Please fill out Name and Creditcard.");
+    public void verifyPurchaseFailsWhenNameAndCardEmpty() {
+        checkoutPage.fillForm("", "Egypt", "Mansoura", "", "6", "2026");
+        checkoutPage.clickPurchase();
+        Assert.assertEquals(checkoutPage.getAlertTextAndAccept(), "Please fill out Name and Creditcard.");
     }
 
     @Test
-    public void TC_0037_verifyCartIsEmptyAfterSuccessfulPurchase() {
-        addProductAndGoToCheckout();
-        CheckoutPage checkout = new CheckoutPage(driver);
-        checkout.fillForm("Shams mo", "Egypt", "Mansoura", "123456789", "6", "2026");
-        checkout.clickPurchase();
-
-        WebElement okButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[text()='OK']")));
-        okButton.click();
-
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("orderModal")));
-
-        HomePage home = new HomePage(driver);
-        CartPage cart = new CartPage(driver);
-        home.openCart();
-        Assert.assertFalse(cart.isProductDisplayed("Samsung galaxy s6"), "Product is still in cart!");
-    }
-    @Test
-    public void TC_0038_verifyNameRejectsWhitespace() {
-        addProductAndGoToCheckout();
-        CheckoutPage checkout = new CheckoutPage(driver);
-        checkout.fillForm("   ", "Egypt", "Mansoura", "123456789", "6", "2026");
-        checkout.clickPurchase();
-        Assert.assertEquals(checkout.getAlertTextAndAccept(), "Invalid Name.");
+    public void verifyCartIsEmptyAfterSuccessfulPurchase() {
+        checkoutPage.fillForm("Shams mo", "Egypt", "Mansoura", "123456789", "6", "2026");
+        checkoutPage.clickPurchase();
+        checkoutPage.clickOk();
+        homePage.openCart();
+        Assert.assertFalse(cartPage.isProductDisplayed("Samsung galaxy s6"), "Product is still in cart!");
     }
 
     @Test
-    public void TC_0039_verifyCreditCardRejectsLetters() {
-        addProductAndGoToCheckout();
-        CheckoutPage checkout = new CheckoutPage(driver);
-        checkout.fillForm("Shams mo", "Egypt", "Mansoura", "abcdef", "6", "2026");
-        checkout.clickPurchase();
-        Assert.assertEquals(checkout.getAlertTextAndAccept(), "Invalid Credit Card.");
+    public void verifyNameRejectsWhitespace() {
+        checkoutPage.fillForm("   ", "Egypt", "Mansoura", "123456789", "6", "2026");
+        checkoutPage.clickPurchase();
+        Assert.assertEquals(checkoutPage.getAlertTextAndAccept(), "Invalid Name.");
     }
 
     @Test
-    public void TC_0040_verifyCreditCardRejectsSpecialCharacters() {
-        addProductAndGoToCheckout();
-        CheckoutPage checkout = new CheckoutPage(driver);
-        checkout.fillForm("Shams mo", "Egypt", "Mansoura", "@#$%^&*", "6", "2026");
-        checkout.clickPurchase();
-        Assert.assertEquals(checkout.getAlertTextAndAccept(), "Invalid Credit Card.");
+    public void verifyCreditCardRejectsLetters() {
+        checkoutPage.fillForm("Shams mo", "Egypt", "Mansoura", "abcdef", "6", "2026");
+        checkoutPage.clickPurchase();
+        Assert.assertEquals(checkoutPage.getAlertTextAndAccept(), "Invalid Credit Card.");
     }
 
     @Test
-    public void TC_0041_verifyMonthAcceptsValidValuesOnly() {
-        addProductAndGoToCheckout();
-        CheckoutPage checkout = new CheckoutPage(driver);
-        checkout.fillForm("Shams mo", "Egypt", "Mansoura", "123456789", "13", "2026");
-        checkout.clickPurchase();
-        Assert.assertEquals(checkout.getAlertTextAndAccept(), "Month must be between 1 and 12");
+    public void verifyCreditCardRejectsSpecialCharacters() {
+        checkoutPage.fillForm("Shams mo", "Egypt", "Mansoura", "@#$%^&*", "6", "2026");
+        checkoutPage.clickPurchase();
+        Assert.assertEquals(checkoutPage.getAlertTextAndAccept(), "Invalid Credit Card.");
     }
 
     @Test
-    public void TC_0042_verifyPlaceOrderNotOpenedWhenCartEmpty() {
-        HomePage home = new HomePage(driver);
-        CartPage cart = new CartPage(driver);
-        home.openCart();
-        Assert.assertTrue(driver.findElements(org.openqa.selenium.By.xpath("//button[text()='Place Order']")).isEmpty());
+    public void verifyMonthAcceptsValidValuesOnly() {
+        checkoutPage.fillForm("Shams mo", "Egypt", "Mansoura", "123456789", "13", "2026");
+        checkoutPage.clickPurchase();
+        Assert.assertEquals(checkoutPage.getAlertTextAndAccept(), "Month must be between 1 and 12");
     }
 
     @Test
-    public void TC_0043_verifyCannotPurchaseWithEmptyCart() {
-        HomePage home = new HomePage(driver);
-        CartPage cart = new CartPage(driver);
-        home.openCart();
-        cart.openPlaceOrder();
-        CheckoutPage checkout = new CheckoutPage(driver);
-        checkout.clickPurchase();
-        Assert.assertEquals(checkout.getAlertTextAndAccept(), "Cart is empty");
+    public void verifyPlaceOrderNotOpenedWhenCartEmpty() {
+        // يحتاج فتح الكارت بدون إضافة منتج
+        homePage.openCart();
+        Assert.assertTrue(cartPage.isPlaceOrderButtonMissing());
+    }
+
+    @Test
+    public void verifyCannotPurchaseWithEmptyCart() {
+        homePage.openCart();
+        cartPage.openPlaceOrder();
+        checkoutPage.clickPurchase();
+        Assert.assertEquals(checkoutPage.getAlertTextAndAccept(), "Cart is empty");
     }
 }
