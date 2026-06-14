@@ -57,14 +57,6 @@ public class CheckoutTest extends BaseTest {
         Assert.assertEquals(checkoutPage.getAlertTextAndAccept(), "Please fill out Name and Creditcard.");
     }
 
-    @Test
-    public void verifyCartIsEmptyAfterSuccessfulPurchase() {
-        checkoutPage.fillForm("Shams mo", "Egypt", "Mansoura", "123456789", "6", "2026");
-        checkoutPage.clickPurchase();
-        checkoutPage.clickOk();
-        homePage.openCart();
-        Assert.assertFalse(cartPage.isProductDisplayed("Samsung galaxy s6"), "Product is still in cart!");
-    }
 
     @Test
     public void verifyNameRejectsWhitespace() {

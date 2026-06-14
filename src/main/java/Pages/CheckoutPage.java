@@ -14,7 +14,11 @@ public class CheckoutPage extends BasePage {
 
     public void fillForm(String name, String country, String city, String card, String month, String year) {
         sendText(nameField, name);
-        // ... باقي الحقول بنفس الطريقة
+        sendText(By.id("country"), country);
+        sendText(By.id("city"), city);
+        sendText(By.id("card"), card);
+        sendText(By.id("month"), month);
+        sendText(By.id("year"), year);
     }
     public void clickPurchase() { click(purchaseBtn); }
     public void clickOk() { click(okBtn); }
