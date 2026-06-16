@@ -10,7 +10,14 @@ public class ProductPage extends BasePage {
     private final By productName = By.cssSelector(".name");
     private final By priceContainer = By.cssSelector(".price-container");
 
-    public void addToCart() { click(addToCartBtn); getAlertTextAndAccept(); }
-    public boolean isProductDetailsVisible() { return isElementDisplayed(productName); }
-    public boolean isPriceVisible() { return isElementDisplayed(priceContainer); }
+    public void addToCart() {
+        click(addToCartBtn);
+        getAlertTextAndAccept();
+    }
+    public boolean isProductDetailsVisible() {
+        return isElementDisplayed(productName);
+    }
+    public boolean isPriceVisible() {
+        return isElementDisplayed(priceContainer);
+    }
 }

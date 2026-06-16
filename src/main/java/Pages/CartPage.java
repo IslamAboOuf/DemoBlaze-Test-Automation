@@ -12,11 +12,25 @@ public class CartPage extends BasePage {
     private final By totalLabel = By.id("totalp");
     private final By cartTable = By.cssSelector("table");
 
-    public boolean isProductDisplayed(String name) { return isElementDisplayed(By.xpath("//td[contains(text(),'" + name + "')]")); }
-    public void deleteProduct() { click(deleteLink); wait.until(ExpectedConditions.invisibilityOfElementLocated(deleteLink)); }
-    public void openPlaceOrder() { click(placeOrderBtn); }
-    public String getTotal() { return getText(totalLabel); }
-    public boolean isCartTableDisplayed() { return isElementDisplayed(cartTable); }
-    public boolean isPlaceOrderButtonDisplayed() { return isElementDisplayed(placeOrderBtn); }
-    public boolean isPlaceOrderButtonMissing() { return !isElementDisplayed(placeOrderBtn); }
+    public boolean isProductDisplayed(String name) {
+        return isElementDisplayed(By.xpath("//td[contains(text(),'" + name + "')]"));
+    }
+    public void deleteProduct() {
+        click(deleteLink); wait.until(ExpectedConditions.invisibilityOfElementLocated(deleteLink));
+    }
+    public void openPlaceOrder() {
+        click(placeOrderBtn);
+    }
+    public String getTotal() {
+        return getText(totalLabel);
+    }
+    public boolean isCartTableDisplayed() {
+        return isElementDisplayed(cartTable);
+    }
+    public boolean isPlaceOrderButtonDisplayed() {
+        return isElementDisplayed(placeOrderBtn);
+    }
+    public boolean isPlaceOrderButtonMissing() {
+        return !isElementDisplayed(placeOrderBtn);
+    }
 }

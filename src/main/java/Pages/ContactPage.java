@@ -8,24 +8,21 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 public class ContactPage {
-    //locators
     private final By contactButton = By.xpath("//a[text()='Contact']");
     private final By emailField = By.id("recipient-email");
     private final By nameField = By.id("recipient-name");
     private final By messageField = By.id("message-text");
     private final By sendMessageButton = By.xpath("//button[text()='Send message']");
 
-    //variables
     protected WebDriver driver;
     protected WebDriverWait wait;
 
-    //constructor
     public ContactPage(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
     }
 
-    //actions
+
     public void ContactForm(String email, String name, String message) {
         wait.until(ExpectedConditions.visibilityOfElementLocated(contactButton));
         driver.findElement(contactButton).click();

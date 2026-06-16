@@ -13,6 +13,7 @@ public class AboutUsTest extends BaseTest {
 
     @BeforeMethod
     public void setup() {
+
         homePage = new HomePage(driver);
     }
 
@@ -27,7 +28,6 @@ public class AboutUsTest extends BaseTest {
         homePage.openAbout();
         homePage.playVideo();
 
-        // هنا السر: ننتظر تحقق الشرط بدلاً من التحقق اللحظي
         boolean isVideoVisible = wait.until(d -> homePage.isVideoPlayerDisplayed());
         Assert.assertTrue(isVideoVisible, "Video player should be displayed");
     }
@@ -37,7 +37,6 @@ public class AboutUsTest extends BaseTest {
         homePage.openAbout();
         homePage.closeAboutModal();
 
-        // هنا السر: ننتظر حتى يختفي المودال تماماً
         boolean isModalHidden = wait.until(d -> homePage.isAboutModalHidden());
         Assert.assertTrue(isModalHidden, "Modal should be invisible after clicking Close!");
     }

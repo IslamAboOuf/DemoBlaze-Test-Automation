@@ -10,14 +10,12 @@ public class ProductTest extends BaseTest {
 
     private HomePage homePage;
     private ProductPage productPage;
-    // 1. يجب تعريف cartPage هنا ليصبح متاحاً داخل الكلاس
     private CartPage cartPage;
 
     @BeforeMethod
     public void setupProductTests() {
         homePage = new HomePage(driver);
         productPage = new ProductPage(driver);
-        // 2. يجب تهيئة الأوبجيكت هنا (حتى "يُبنى المنزل")
         cartPage = new CartPage(driver);
     }
 
@@ -34,7 +32,6 @@ public class ProductTest extends BaseTest {
         productPage.addToCart();
         homePage.openCart();
 
-        // 3. الآن يمكنك استخدام cartPage (الذي تم تهيئته) بنجاح
         Assert.assertTrue(cartPage.isProductDisplayed("Samsung galaxy s6"),
                 "Product should be visible in the cart after adding it.");
     }
