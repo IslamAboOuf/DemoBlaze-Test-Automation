@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="ITI Examination Suite">
+
+    <test name="Full Test Run">
+        <classes>
+            <class name="Test.RegisterTest"/>
+            <class name="Test.LoginTest"/>
+            <class name="Test.ContactTest"/>
+            <class name="Test.AboutUsTest"/>
+            <class name="Test.ProductTest"/>
+            <class name="Test.CartTest"/>
+            <class name="Test.CheckoutTest"/>
+        </classes>
+    </test>
+
+</suite>
